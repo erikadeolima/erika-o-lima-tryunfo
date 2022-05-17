@@ -3,35 +3,52 @@ import Form from './components/Form';
 import Card from './components/Card';
 
 class App extends React.Component {
-    state= {
-      cardName: '',
-      cardDescription: '',
-      cardAttr1: 0,
-      cardAttr2: 0,
-      cardAttr3: 0,
-      cardImage: '',
-      cardRare: '',
-      cardTrunfo: false,
-      hasTrunfo: false,
-      /* isSaveButtonDisabled: false, */
-    };
+  state = {
+    cardName: '',
+    cardDescription: '',
+    cardAttr1: 0,
+    cardAttr2: 0,
+    cardAttr3: 0,
+    cardImage: '',
+    cardRare: '',
+    isSaveButtonDisabled: true,
+    hasTrunfo: false,
+    cardTrunfo: false,
+  };
 
   onInputChange = ({ target }) => {
     const { name } = target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({
-      [name]: value,
-    });
-    if (cardTrunfo) this.setState({ hasTrunfo: true });
-  }
+    this.setState(() => ({ [name]: value }), this.validaButton);
+  };
 
-  /* onSaveButtonClick = () => {
-    this.setState();
-  } */
+  onSaveButtonClick = () => {};
 
-  /* isSaveButtonDisabled() {
-    this.setState();
-  } */
+  validaButton = () => {
+    const {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+    } = this.state;
+    let validaButton = true;
+
+    if (Number(cardAttr1 + cardAttr2 + cardAttr3 > '210')) {
+      validaButton = false;
+    }
+    if (Number(cardAttr1 > '90' || cardAttr1 < 0)) validaButton = false;
+    if (Number(cardAttr2 > '90' || cardAttr2 < 0)) validaButton = false;
+    if (Number(cardAttr3 > '90' || cardAttr3 < 0)) validaButton = false;
+
+    if (cardName && cardDescription && cardImage && cardRare && validaButton) {
+      this.setState(() => ({ isSaveButtonDisabled: false }));
+    } else {
+      this.setState(() => ({ isSaveButtonDisabled: true }));
+    }
+  };
 
   render() {
     const {
@@ -42,8 +59,9 @@ class App extends React.Component {
       cardAttr3,
       cardImage,
       cardRare,
-      cardTrunfo,
       hasTrunfo,
+      cardTrunfo,
+      isSaveButtonDisabled,
     } = this.state;
     return (
       <div>
@@ -58,7 +76,9 @@ class App extends React.Component {
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
           hasTrunfo={ hasTrunfo }
+          isSaveButtonDisabled={ isSaveButtonDisabled }
           onInputChange={ this.onInputChange }
+          onSaveButtonClick={ this.onSaveButtonClick }
         />
         <Card
           cardName={ cardName }
@@ -69,7 +89,6 @@ class App extends React.Component {
           cardImage={ cardImage }
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
-          hasTrunfo={ hasTrunfo }
         />
       </div>
     );
