@@ -14,6 +14,7 @@ class App extends React.Component {
     isSaveButtonDisabled: true,
     hasTrunfo: false,
     cardTrunfo: false,
+    cards: [],
   };
 
   onInputChange = ({ target }) => {
@@ -22,7 +23,37 @@ class App extends React.Component {
     this.setState(() => ({ [name]: value }), this.validaButton);
   };
 
-  onSaveButtonClick = () => {};
+  onSaveButtonClick = () => {
+    const {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+    } = this.state;
+    const myInformation = {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+    };
+    this.setState(({ cards }) => ({ cards: [...cards, myInformation] }), () => {
+      this.setState(() => ({
+        cardName: '',
+        cardDescription: '',
+        cardAttr1: 0,
+        cardAttr2: 0,
+        cardAttr3: 0,
+        cardImage: '',
+        cardRare: 'normal',
+      }));
+    });
+  };
 
   validaButton = () => {
     const {
@@ -34,6 +65,7 @@ class App extends React.Component {
       cardImage,
       cardRare,
     } = this.state;
+
     let validaButton = true;
 
     if (Number(cardAttr1 + cardAttr2 + cardAttr3 > '210')) {
